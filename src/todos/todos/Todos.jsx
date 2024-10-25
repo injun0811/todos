@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import TodoInput from '../todoInput/TodoInput';
 import TodoList from '../todoList/TodoList';
 import './Todos.scss';
@@ -8,33 +8,37 @@ const Todos = () => {
     const [todos, setTodos] = useState(todosData);
     const [showTodos, setShowTodos] = useState(todosData);
     const [clickBtn, setClickBtn] = useState('all');
-    const no = useRef(1);
+    const no = showTodos.length + 1;
 
     // 추가
     const addBtn = (text) => {
-        setTodos([...todos, { id: no.current++, text, isDone: false, isMod: false }]);
+        setTodos([...todos, { id: no, text, isDone: false, isMod: false }]);
+        setShowTodos([...showTodos, { id: no, text, isDone: false, isMod: false }]);
     };
 
     // 삭제
     const delBtn = (id) => {
         setTodos(todos.filter((todo) => todo.id !== id));
+        setShowTodos(showTodos.filter((todo) => todo.id !== id));
     };
 
     // 완료 처리
     const updBtn = (e, id) => {
         const { checked } = e.target;
-        // isDone : 토글 형태로 사용 가능
         setTodos(todos.map((todo) => (todo.id === id ? { ...todo, isDone: checked } : todo)));
+        setShowTodos(showTodos.map((todo) => (todo.id === id ? { ...todo, isDone: checked } : todo)));
     };
 
     // 데이터 수정
     const onMode = (id) => {
         setTodos(todos.map((todo) => (todo.id === id ? { ...todo, isMod: true } : todo)));
+        setShowTodos(showTodos.map((todo) => (todo.id === id ? { ...todo, isMod: true } : todo)));
     };
 
     // 데이터 저장
     const onSave = (id, text) => {
         setTodos(todos.map((todo) => (todo.id === id ? { ...todo, isMod: false, text } : todo)));
+        setShowTodos(showTodos.map((todo) => (todo.id === id ? { ...todo, isMod: false, text } : todo)));
     };
 
     // 전체 : 모두 보이기
