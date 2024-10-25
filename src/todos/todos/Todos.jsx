@@ -2,9 +2,12 @@ import { useRef, useState } from 'react';
 import TodoInput from '../todoInput/TodoInput';
 import TodoList from '../todoList/TodoList';
 import './Todos.scss';
+import todosData from '../../assets/api/todoData';
+import TodosTotalController from '../todoTotalController/TodosTotalController';
 const Todos = () => {
-    const [todos, setTodos] = useState([]);
-    // {id : 1, text: dwfgwgasgsa, isDone:false}
+    const [todos, setTodos] = useState(todosData);
+    const [showTodos, setShowTodos] = useState(todosData);
+    const [clickBtn, setClickBtn] = useState('all');
     const no = useRef(1);
 
     // 추가
@@ -34,11 +37,37 @@ const Todos = () => {
         setTodos(todos.map((todo) => (todo.id === id ? { ...todo, isMod: false, text } : todo)));
     };
 
+    // 전체 : 모두 보이기
+    const totalShow = () => {
+        setClickBtn('all');
+        setShowTodos(todos);
+    };
+
+    // 완료 : isDone(true) 보이기
+    const completeShow = () => {
+        setClickBtn('com');
+        setShowTodos(todos.filter((todo) => todo.isDone));
+    };
+
+    // 진행 : isDone(false) 보이기
+    const ingShow = () => {
+        setClickBtn('ing');
+        setShowTodos(todos.filter((todo) => !todo.isDone));
+    };
+
     return (
         <div className="Todos">
             <h2>할일 만들기</h2>
             <TodoInput addBtn={addBtn} />
-            <TodoList todos={todos} delBtn={delBtn} updBtn={updBtn} onMode={onMode} onSave={onSave} />
+            <TodoList showTodos={showTodos} delBtn={delBtn} updBtn={updBtn} onMode={onMode} onSave={onSave} />
+            <TodosTotalController
+                todos={todos}
+                showTodos={showTodos}
+                totalShow={totalShow}
+                completeShow={completeShow}
+                ingShow={ingShow}
+                clickBtn={clickBtn}
+            />
         </div>
     );
 };
