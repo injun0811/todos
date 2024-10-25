@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './TodosTotalController.scss';
 
 const TodosTotalController = ({ todos, showTodos, totalShow, completeShow, ingShow, clickBtn }) => {
